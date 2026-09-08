@@ -1,0 +1,15 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /ev_users/{document} {
+      allow read: if true;
+    }
+    match /ev_users/{doc}/monthly_totals/{document} {
+      allow read: if true;
+    }
+    match /events/{document=**} {
+      allow read: if true;
+    }
+  }
+}
