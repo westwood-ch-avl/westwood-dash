@@ -297,7 +297,15 @@ def create_new_user(email, password, admin=False):
     except Exception as e:
         print(f"Error creating user: {e}")
 
+def set_working_directory():
+    '''Python has a quirk where the working directory can be ambiguous, depending on how script is run in the terminal. This will set the current working directory to wherever the .py script is located.'''
+    if os.path.dirname(sys.argv[0]) != "" and os.path.dirname(sys.argv[0]) != "." and os.path.dirname(sys.argv[0]) != None:
+
+        os.chdir(os.path.dirname(sys.argv[0]))
+
 if __name__ == "__main__":
+
+    set_working_directory()
 
     load_dotenv()
 
