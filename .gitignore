@@ -73,3 +73,5 @@ local-*
 *.local
 **/local-*
 **/*.local
+
+.vscode
