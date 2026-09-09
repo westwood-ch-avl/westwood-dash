@@ -2,6 +2,7 @@ from firebase_functions import https_fn, identity_fn
 from firebase_functions.options import set_global_options
 from firebase_admin import initialize_app
 from firebase_admin import credentials, firestore, auth
+from models.invite_token import Invite_Token
 
 # For cost control, you can set the maximum number of containers that can be
 # running at the same time. This helps mitigate the impact of unexpected

@@ -69,3 +69,7 @@ node_modules/
 .dataconnect
 
 __pycache__
+local-*
+*.local
+**/local-*
+**/*.local
