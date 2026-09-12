@@ -1,17 +1,20 @@
-//TODO -- how to handle when a user is signed out, or signed it, and I want logic to happen that is outside the realm of this auth UI? Need to find a way to *pass* this kind of event? Or pass a function *in* to this module? I could designate a class, for example ".for-signed-in-users", and then hide or delete such elements.
+//NOTES:
+//1. this library assumes an option for "custom claims" where key is "admin" is true/false. You don't have to use it.
+//2. this library does a lot of leg work for when a user change state happens. An additional optional function can be passed to be added to the handler.
+//3. the "auth" object is attached to the window for use as a kind of global variable. It can referenced at `window.auth_mgr_auth` once everything is initialized.
+//4. upon sign out, anything with class 'hwso' (hide when signed out will get the "d-none" class.) Anything with the class 'dwso' will be deleted from the DOM.
+//5. upon sign-in, anything with the class 'swsi' (show when signed in) will get the class "d-none" removed if present. Similarly, 'swsia' will trigger for admin sign in.
 
-//I believe its possible to pass in a function to, say, the initialize_auth method, and then include that function in the callback. (This is because of something called "lexical scoping")
-
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "firebase/auth";
 import styles from "../auth_mgr.css" with { type: "css" };
 
-export function set_up_auth(){
+export function set_up_auth(optionalOnChangeFunc = undefined){
 
     document.adoptedStyleSheets.push(styles);
 
     buildHTML();
 
-    initialize_auth();
+    initialize_auth(optionalOnChangeFunc);
 
     handle_handlers();
 
@@ -31,9 +34,12 @@ function buildHTML(){
     sign_out_form = $("<div class='d-none' id='sign_out_form' style='padding:1rem;'></div>");
     sign_up_form = $("<div class='d-none' id='sign_up_form' style='padding:1rem;'></div>");
 
+    message_zone = $("<div style='padding:1rem;' class='d-none' id='auth-mgr-msg-zone'></div>");
+
     auth_menu.append(log_in_form);
     auth_menu.append(sign_out_form);
     auth_menu.append(sign_up_form);
+    auth_menu.append(message_zone);
 
     $(body).append(auth_menu);
 
@@ -55,6 +61,8 @@ function close_auth_menu(){
     $('#log_in_form').addClass('d-none');
     $('#sign_out_form').addClass('d-none');
     $('#sign_up_form').addCLass('d-none');
+    $('#auth_mgr_msg_zone').addClass('d-none');
+    $('#auth_mgr_msg_zone').html("");
 }
 
 function initialize_auth(){
@@ -62,12 +70,15 @@ function initialize_auth(){
     var jqi = $('#auth-menu-icon');
 
     const auth = getAuth();
+    window.auth_mgr_auth = auth;
+
     onAuthStateChanged(auth, (user) => {
         if (user) {
             // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/auth.user
             const uid = user.uid;
             jqi.addClass('signed-in');
+            $('swsi').removeClass('d-none');
             
             user.getIdTokenResult(true)
                 .then((idTokenResult) => {
@@ -76,6 +87,7 @@ function initialize_auth(){
 
                     jqi.removeClass('signed-in');
                     jqi.addClass('signed-in-admin');
+                    $('swsia').removeClass('d-none');
                     } 
 
                 })
@@ -87,7 +99,12 @@ function initialize_auth(){
             // User is signed out
             jqi.removeClass('signed-in');
             jqi.removeClass('signed-in-admin');
-            // ...
+            $('.hwso').addClass('d-none');
+            $('.dwso').remove();
+        }
+
+        if (optionalOnChangeFunc != undefined){
+            optionalOnChangeFunc();
         }
     });
 
@@ -121,19 +138,49 @@ function handle_handlers(){
 
     $('#sign-out-btn').on("click", function(){
 
-        const auth = getAuth();
+        $('#sign-out-btn').prop('disabled', true);
+
+        $('#auth-mgr-msg-zone').html("Waiting . . .");
+
+        const auth = window.auth_mgr_auth;
         signOut(auth).then(() => {
 
             close_auth_menu();
 
         }).catch((error) => {
-            alert("Error: " + error.code + "\n" + error.message)
+
+            $('#auth-mgr-msg-zone').html('<p>Error: ' + error.code + '</p><p>' + error.message + '</p>');
+        }).finally(() => {
+
+            $('#sign-out-btn').prop('disabled', false);
         });
     });
 
     $('#input-login-submit').on("click", function(){
 
-        //handle clicking on the login button TODO
+        email = $('#input-login-email').val()
+        password = $('#input-login-password').val()
+
+        $('#input-login-submit').prop('disabled', true);
+
+        $('#auth-mgr-msg-zone').html("Waiting . . .");
+
+        const auth = window.auth_mgr_auth;
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+
+            close_auth_menu();
+        })
+        .catch((error) => {
+            $('#auth-mgr-msg-zone').html('<p>Error: ' + error.code + '</p><p>' + error.message + '</p>');
+            
+        })
+        .finally(() =>{
+            $('#input-login-submit').prop('disabled', false);
+        });
+
     });
 
     //TODO finish making the sign up form and handle clicks.

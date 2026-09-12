@@ -18,6 +18,6 @@ const analytics = getAnalytics(app);
 
 $(function () {
 
-
+    set_up_auth(); //This is a WIP...
 
 });
