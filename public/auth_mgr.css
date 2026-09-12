@@ -1,0 +1,6 @@
+.signed-in{
+    filter: invert(25%) sepia(52%) saturate(5496%) hue-rotate(104deg) brightness(91%) contrast(102%);
+}
+.signed-in-admin{
+    filter: invert(13%) sepia(96%) saturate(4464%) hue-rotate(243deg) brightness(90%) contrast(156%);
+}

@@ -3,37 +3,3 @@
     margin-top:6rem;
     border:1px solid gray;
 }
-#auth-menu-btn{
-    position: fixed;
-    display: inline-block;
-    top:1.5rem;
-    right:2rem;
-    filter: drop-shadow(0 0 0.75rem gray);
-    border:1px solid gray;
-    border-radius:1.5rem;
-    background-color: white;
-    padding:1px;
-}
-#auth-menu-btn-img{
-    width:3rem;
-    height:3rem;
-}
-
-.signed-in{
-    filter: invert(25%) sepia(52%) saturate(5496%) hue-rotate(104deg) brightness(91%) contrast(102%);
-}
-.signed-in-admin{
-    filter: invert(13%) sepia(96%) saturate(4464%) hue-rotate(243deg) brightness(90%) contrast(156%);
-}
-
-#log-in-dialog:modal{
-    top:1.5rem;
-    right:2rem;
-    margin:0px;
-    margin-left:auto;
-    filter: drop-shadow(0 0 0.75rem gray);
-    background-color:white;
-    border-radius:1.5rem;
-    border:1px solid gray;
-    overscroll-behavior: contain;
-}
