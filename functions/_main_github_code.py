@@ -18,7 +18,7 @@ from pprint import pp
 
 def initialize_firebase_service_account() -> firestore.client:
 
-    key_dict = json.loads(os.environ.get("FIREBASE_DICT"))
+    key_dict = json.loads(os.environ.get("FB_DICT"))
 
     cred = credentials.Certificate(key_dict)
     firebase_admin.initialize_app(cred)

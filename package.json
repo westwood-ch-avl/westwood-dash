@@ -2,13 +2,13 @@
   "name": "fb-wcha-app",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/westwood-ch-avl/fb-hosting#readme",
+  "homepage": "https://github.com/westwood-ch-avl/westwood-dash#readme",
   "bugs": {
-    "url": "https://github.com/westwood-ch-avl/fb-hosting/issues"
+    "url": "https://github.com/westwood-ch-avl/westwood-dash/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/westwood-ch-avl/fb-hosting.git"
+    "url": "git+https://github.com/westwood-ch-avl/westwood-dash.git"
   },
   "license": "ISC",
   "author": "",

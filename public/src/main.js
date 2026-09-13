@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { objs_to_csv_string } from './csv_tools.js';
-import { set_up_auth } from "auth_mgr.js";
+import { set_up_auth } from "./auth_mgr.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBwyUE5DVV6SmZfK5jUXa5aTlacIf1StgE",
