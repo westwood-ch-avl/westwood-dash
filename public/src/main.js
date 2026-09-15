@@ -32,7 +32,10 @@ $(function () {
             // Read result of the Cloud Function.
             /** @type {any} */
             const data = result.data;
-            alert(data["invite-token"]);
+
+            $('#invite-token-heading').removeClass("d-none");
+            $('#invite-token-list').removeClass("d-none");
+            $('#invite-token-list').append("<li>" + data["invite-token"] + "</li>");
         }).catch((error) => {
             alert("Error registered: " + error.code + "\n" + error.message + "\n" + error.details);
         });
