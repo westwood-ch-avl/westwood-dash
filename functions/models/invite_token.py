@@ -18,6 +18,8 @@ class Invite_Token:
         if date_created == None:
             date_created = datetime.now().astimezone(dateutil.tz.gettz(os.environ.get("TZ")))
 
+        self.date_created = date_created
+        self.assignee = assignee
         self.expires = date_created + relativedelta(days=+2)
 
     @staticmethod
@@ -26,7 +28,14 @@ class Invite_Token:
         r = RandomWord()
         return r.word(word_min_length=4, word_max_length=4) + "-" + r.word(word_min_length=4, word_max_length=4) + "-" + r.word(word_min_length=4, word_max_length=4)
 
-if __name__ == "__main__":
+    def generate_doc_key(self):
 
-    r = RandomWord()
-    print(r.word(word_min_length=4, word_max_length=4) + "-" + r.word(word_min_length=4, word_max_length=4) + "-" + r.word(word_min_length=4, word_max_length=4))
+        return self.token
+
+    def to_dict(self):
+        return {
+            "token": self.token,
+            "date_created": self.date_created,
+            "expires": self.expires,
+            "assignee": self.assignee
+        }

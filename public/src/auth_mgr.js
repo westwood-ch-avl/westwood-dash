@@ -60,8 +60,8 @@ function close_auth_menu(){
     $('#log_in_form').addClass('d-none');
     $('#sign_out_form').addClass('d-none');
     $('#sign_up_form').addClass('d-none');
-    $('#auth_mgr_msg_zone').html("");
-    $('#auth_mgr_msg_zone').addClass("d-none");
+    $('#auth-mgr-msg-zone').html("");
+    $('#auth-mgr-msg-zone').addClass("d-none");
 }
 
 function initialize_auth(optionalOnChangeFunc = undefined){
@@ -79,7 +79,7 @@ function initialize_auth(optionalOnChangeFunc = undefined){
             console.log("user is signed in.");
             const uid = user.uid;
             jqi.addClass('signed-in');
-            $('swsi').removeClass('d-none');
+            $('.swsi').removeClass('d-none');
             
             user.getIdTokenResult(true)
                 .then((idTokenResult) => {
@@ -88,7 +88,7 @@ function initialize_auth(optionalOnChangeFunc = undefined){
 
                     jqi.removeClass('signed-in');
                     jqi.addClass('signed-in-admin');
-                    $('swsia').removeClass('d-none');
+                    $('.swsia').removeClass('d-none');
                     } 
 
                 })

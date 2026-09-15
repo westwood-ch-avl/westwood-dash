@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { objs_to_csv_string } from './csv_tools.js';
 import { set_up_auth } from "./auth_mgr.js";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBwyUE5DVV6SmZfK5jUXa5aTlacIf1StgE",
@@ -18,6 +19,24 @@ const analytics = getAnalytics(app);
 
 $(function () {
 
-    set_up_auth(); //This is a WIP...
+    $('#loading-msg').addClass('d-none');
+
+    set_up_auth();
+
+    $('#get-invite-code').on("click", function(){
+
+        const functions = getFunctions(app, "us-east1");
+        const get_fresh_invite_tokenv2 = httpsCallable(functions, 'get_fresh_invite_tokenv2');
+        get_fresh_invite_tokenv2()
+        .then((result) => {
+            // Read result of the Cloud Function.
+            /** @type {any} */
+            const data = result.data;
+            alert(data["invite-token"]);
+        }).catch((error) => {
+            alert("Error registered: " + error.code + "\n" + error.message + "\n" + error.details);
+        });
+
+    });
 
 });

@@ -265,16 +265,6 @@ def generate_chart_tables(db, ev_users: dict):
     ref = db.collection("chart_data").document(new_chart.generate_key())
     ref.set(new_chart.to_dict())
 
-def generate_new_tokens(num:int=1) -> list:
-
-    new_tokens = []
-
-    while len(new_tokens) < num:
-
-        new_tokens.append(Invite_Token.generate_token())
-
-    return new_tokens
-
 def create_new_user(email, password, admin=False):
 
     try:

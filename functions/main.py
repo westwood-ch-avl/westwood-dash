@@ -1,4 +1,4 @@
-from firebase_functions import https_fn, identity_fn
+from firebase_functions import https_fn, identity_fn, options
 from firebase_functions.options import set_global_options
 from firebase_admin import initialize_app
 from firebase_admin import credentials, firestore, auth
@@ -13,11 +13,6 @@ set_global_options(max_instances=10)
 
 initialize_app()
 
-@https_fn.on_request()
-def on_request_example(req: https_fn.Request) -> https_fn.Response:
-    
-    return https_fn.Response("Hello world!")
-
 @https_fn.on_call(region="us-east1")
 def check_invite_token(req: https_fn.CallableRequest) -> dict:
 
@@ -31,21 +26,30 @@ def check_invite_token(req: https_fn.CallableRequest) -> dict:
     return result
 
 @https_fn.on_call(region="us-east1")
-def get_fresh_invite_token(req: https_fn.CallableRequest) -> dict:
+def get_fresh_invite_tokenv2(req: https_fn.CallableRequest) -> dict:
 
-    decoded_token = auth.verify_id_token(req.auth.token)
-    is_admin = decoded_token.get("admin", False)
+    if req.auth is None:
+        raise https_fn.HttpsError(
+            code=https_fn.FunctionsErrorCode.UNAUTHENTICATED,
+            message="This function must be called by an authenticated user."
+        )
 
-    if is_admin == False:
-        return "no_token"
+    is_admin = req.auth.token.get("admin") is True
 
-    new_token = Invite_Token(Invite_Token.generate_token_text())
+    if not is_admin:
+        # Raise a PERMISSION_DENIED error if they aren't an admin
+        raise https_fn.HttpsError(
+            code=https_fn.FunctionsErrorCode.PERMISSION_DENIED,
+            message="Access denied. You do not have administrator privileges."
+        )
+    else:
+        new_token = Invite_Token(Invite_Token.generate_token_text())
 
-    db = firestore.client()
+        db = firestore.client()
 
-    db.collection("invite_tokens").document(new_token.token).set(new_token.to_dict())
+        db.collection("invite_tokens").document(new_token.token).set(new_token.to_dict())
 
-    return new_token.token #TODO There's some polish to apply here, in terms of how the returned text is presented.
+        return {"invite-token": new_token.token}
 
 ##This tells how to complete this on the user side: https://firebase.google.com/docs/auth/extend-with-blocking-functions#blocking_registration_or_sign-in
 @identity_fn.before_user_created()
