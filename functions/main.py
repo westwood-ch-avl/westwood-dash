@@ -49,7 +49,7 @@ def get_fresh_invite_tokenv2(req: https_fn.CallableRequest) -> dict:
 
         db.collection("invite_tokens").document(new_token.token).set(new_token.to_dict())
 
-        return {"invite-token": new_token.token}
+        return {"invite-token": new_token.token, "expires": new_token.expires.isoformat()}
 
 ##This tells how to complete this on the user side: https://firebase.google.com/docs/auth/extend-with-blocking-functions#blocking_registration_or_sign-in
 @identity_fn.before_user_created()

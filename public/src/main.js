@@ -35,7 +35,7 @@ $(function () {
 
             $('#invite-token-heading').removeClass("d-none");
             $('#invite-token-list').removeClass("d-none");
-            $('#invite-token-list').append("<li>" + data["invite-token"] + "</li>");
+            $('#invite-token-list').append("<li>" + data["invite-token"] + "<br/>Expires: " + data["expires"] + "</li>");
         }).catch((error) => {
             alert("Error registered: " + error.code + "\n" + error.message + "\n" + error.details);
         });
