@@ -25,6 +25,9 @@ $(function () {
 
     $('#get-invite-code').on("click", function(){
 
+        let h = $('#get-invite-code').html();
+        $('#get-invite-code').html(h + "<span> | retrieving . . . </span>");
+
         const functions = getFunctions(app, "us-east1");
         const get_fresh_invite_tokenv2 = httpsCallable(functions, 'get_fresh_invite_tokenv2');
         get_fresh_invite_tokenv2()
@@ -38,6 +41,8 @@ $(function () {
             $('#invite-token-list').append("<li>" + data["invite-token"] + "<br/>Expires: " + data["expires"] + "</li>");
         }).catch((error) => {
             alert("Error registered: " + error.code + "\n" + error.message + "\n" + error.details);
+        }).finally(() => {
+            $("#get-invite-code span").remove();
         });
 
     });
