@@ -6,6 +6,7 @@
 
 import { getAuth, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import styles from "../auth_mgr.css" with { type: "css" };
+import { toasturDone, toasturStart } from "./toastur";
 
 export function set_up_auth(optionalOnChangeFunc = undefined){
 
@@ -142,6 +143,8 @@ function handle_handlers(){
 
     $('#sign-out-btn').on("click", function(){
 
+        let jqToast = toasturStart("Signing out . . .", 500, 0);
+
         $('#sign-out-btn').prop('disabled', true);
 
         $('#auth-mgr-msg-zone').removeClass("d-none");
@@ -160,6 +163,8 @@ function handle_handlers(){
         }).finally(() => {
 
             $('#sign-out-btn').prop('disabled', false);
+
+            toasturDone(jqToast);
         });
     });
 
@@ -175,6 +180,8 @@ function handle_handlers(){
         $('#auth-mgr-msg-zone').removeClass("d-none");
 
         $('#auth-mgr-msg-zone').html("Waiting . . .");
+
+        let jqToast = toasturStart("Signing in . . .", 500, 0);
 
         const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password)
@@ -193,6 +200,8 @@ function handle_handlers(){
         })
         .finally(() =>{
             $('#input-login-submit').prop('disabled', false);
+
+            toasturDone(jqToast);
         });
 
     });

@@ -3,6 +3,7 @@ import { getAnalytics } from 'firebase/analytics';
 import { objs_to_csv_string } from './csv_tools.js';
 import { set_up_auth } from "./auth_mgr.js";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { toasturStart, toasturDone, buildToastContainer } from "./toastur.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBwyUE5DVV6SmZfK5jUXa5aTlacIf1StgE",
@@ -18,6 +19,8 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 $(function () {
+
+    buildToastContainer();
 
     $('#loading-msg').addClass('d-none');
 
