@@ -14,6 +14,50 @@ set_global_options(max_instances=10)
 initialize_app()
 
 @https_fn.on_call(region="us-east1")
+def delete_user(req: https_fn.CallableRequest) -> dict:
+
+    if req.auth is None:
+        raise https_fn.HttpsError(
+            code=https_fn.FunctionsErrorCode.UNAUTHENTICATED,
+            message="This function must be called by an authenticated user."
+        )
+
+    is_admin = req.auth.token.get("admin") is True
+
+    if not is_admin:
+        # Raise a PERMISSION_DENIED error if they aren't an admin
+        raise https_fn.HttpsError(
+            code=https_fn.FunctionsErrorCode.PERMISSION_DENIED,
+            message="Access denied. You do not have administrator privileges."
+        )
+
+    try:
+        email = req.data.get("email")
+        if not isinstance(email, str) or not email.strip():
+            raise https_fn.HttpsError(
+                code=https_fn.FunctionsErrorCode.INVALID_ARGUMENT,
+                message="A valid email address is required.",
+            )
+
+        user = auth.get_user_by_email(email.strip())
+        auth.delete_user(user.uid)
+
+        return {"success": True, "uid": user.uid}
+    except auth.UserNotFoundError:
+        raise https_fn.HttpsError(
+            code=https_fn.FunctionsErrorCode.NOT_FOUND,
+            message="No user was found with that email address.",
+        )
+    except https_fn.HttpsError:
+        raise
+    except Exception as error:
+        print(f"Error deleting user: {error}")
+        raise https_fn.HttpsError(
+            code=https_fn.FunctionsErrorCode.INTERNAL,
+            message="The user could not be deleted.",
+        )
+
+@https_fn.on_call(region="us-east1")
 def check_invite_token(req: https_fn.CallableRequest) -> dict:
 
     attempted_token = req.data["token"]
