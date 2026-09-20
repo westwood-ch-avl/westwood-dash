@@ -50,4 +50,35 @@ $(function () {
 
     });
 
+    $('#delete_user').on("click", function(){
+        let email = prompt("User's email address: ");
+        if (email != null && email != ""){
+
+            let h = $('#delete_user').html();
+            $('#delete_user').html(h + "<span> | Waiting . . . </span>");
+
+            const functions = getFunctions(app, "us-east1");
+            const delete_user = httpsCallable(functions, 'delete_user');
+            delete_user()
+            .then((result) => {
+                // Read result of the Cloud Function.
+                /** @type {any} */
+                const data = result.data;
+
+                if (data["success"] == true){
+                    alert("User deleted.");
+                }
+                else{
+                    alert("Indeterminate response.");
+                }
+            }).catch((error) => {
+                alert("Error registered: " + error.code + "\n" + error.message + "\n" + error.details);
+            }).finally(() => {
+                $('#delete_user span').remove();
+            });
+
+
+        }
+    });
+
 });
