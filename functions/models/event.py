@@ -42,6 +42,9 @@ class Event:
             id = source["id"]
         )
 
+    def generate_doc_key(self):
+        return self.id
+
     def to_dict(self):
         return {
             "start_time": self.start_time,

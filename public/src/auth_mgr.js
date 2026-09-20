@@ -181,7 +181,7 @@ function handle_handlers(){
 
         $('#auth-mgr-msg-zone').html("Waiting . . .");
 
-        let jqToast = toasturStart("Signing in . . .", 500, 0);
+        let jqToast = toasturStart("Signing in . . .", 1000, 0);
 
         const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password)

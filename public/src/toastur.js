@@ -1,12 +1,11 @@
 export function buildToastContainer(){
-    console.log("appending the toast container.");
-    $(document.body).append(`<div class="toast-container bottom-0 end-0 p-3"></div>`);
+    $(document.body).append(`<div class="toast-container bottom-0 end-0 p-4" style="margin-left:auto;margin-right:0px;"></div>`);
 }
 
 //set mintime to zero, and use a maxtime, for a regular Toast. Set maxtime to zero, and use a mintime, for a toast that will be removed by a callback. (Like a waiting notice.) NB: in the latter case, the below "done" function should be called inside of a "finally" step.
-export function toasturStart(content, minTime=500, maxTime = 0){
+export function toasturStart(content, minTime=1000, maxTime = 0){
 
-    let autohide = ""
+    let autohide = "";
 
     if(maxTime == 0 || maxTime == -1 || maxTime == undefined ){
         autohide = `data-bs-autohide="false"`;
@@ -15,7 +14,7 @@ export function toasturStart(content, minTime=500, maxTime = 0){
         autohide = `data-bs-delay="${maxTime.toString}"`;
     }
 
-    let jqToastObject = $(`<div class="toast" ${autohide}}>${content}</div>`);
+    let jqToastObject = $(`<div class="toast" ${autohide}}><div class="toast-body">${content}</div></div>`);
 
     let cont = $('.toast-container');
 

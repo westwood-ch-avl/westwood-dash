@@ -4,12 +4,26 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /ev_users/{document} {
       allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    match /ev_users/{doc}/private/{document} {
+      allow read: if request.auth != null;
+      allow write: if request.auth.token.admin == true;
     }
     match /ev_users/{doc}/monthly_totals/{document} {
       allow read: if true;
+      allow write: if request.auth.token.admin == true;
     }
     match /events/{document=**} {
       allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    match /chart_data/{document=**} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    match /invite_tokens/{document=**} {
+     allow read, write: if request.auth.token.admin == true;
     }
   }
 }
